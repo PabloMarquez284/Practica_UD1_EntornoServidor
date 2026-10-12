@@ -42,3 +42,41 @@ const inscripciones = [
     email: "manuel.granados@eusa.es"
   }
 ];
+
+function obtenerPlazasRestantes(taller, inscripciones) {
+  const inscritos = inscripciones.filter(inscripcion => inscripcion.tallerId === taller.id);
+  return taller.plazas - inscritos.length;
+}
+
+function estaInscrito(tallerId, email, inscripciones) {
+    return inscripciones.some(inscripcion => inscripcion.tallerId === tallerId && inscripcion.email.toLowerCase() === email.toLowerCase());
+}
+
+function validarInscripcion(datos) {
+    const { tallerId, nombre, email } = datos;
+    let errores = {};
+    let esValido = true;
+    let regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!tallerId || isNaN(tallerId)) {
+        errores.tallerId = "El taller es obligatorio";
+    }
+    if (!nombre || nombre.trim() === "") {
+        errores.nombre = "El nombre es obligatorio";
+    }
+    if (!email || email.trim() === "") {
+        errores.email = "El email es obligatorio";
+    } else if (!regexEmail.test(email)) {
+        errores.email = "El email no es válido";
+    }
+    esValido = Object.keys(errores).length === 0;
+    return { esValido, errores };
+}
+
+module.exports = {
+  talleres,
+  inscripciones,
+  obtenerPlazasRestantes,
+  estaInscrito,
+  validarInscripcion
+};
