@@ -1,1 +1,4 @@
 # Practica_UD1_EntornoServidor
+
+Antes que nada, he instalado node.js en mi dispositivo para poder realizar el proyecto. Una vez instalado, he ejecutado node -v y nom -v para verificar que muestran una versión y luego lo he ejecutado con este comando ‘npm init -y’. En el código del paquete ‘package.json’ que se ha creado  he cambiado el tipo de ‘commonjs’ a “module’ para que así se puedan importar y exportar.
+Luego he instalado el paquete express con el comando ‘npm install express’, y así con todos estos paquetes: ejs, express-session, bcrypt, express-rate-limit, --save-dev, vitest y supertest. Y con esto completamos la base del proyecto.
