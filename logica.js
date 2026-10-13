@@ -1,3 +1,4 @@
+//Datos para talleres
 const talleres = [
   {
     id: 1,
@@ -22,6 +23,7 @@ const talleres = [
   }
 ];
 
+//Datos para inscripciones
 const inscripciones = [
   {
     id: 1,
@@ -43,15 +45,18 @@ const inscripciones = [
   }
 ];
 
+//Función para obtener las plazas restantes en un taller
 function obtenerPlazasRestantes(taller, inscripciones) {
   const inscritos = inscripciones.filter(inscripcion => inscripcion.tallerId === taller.id);
   return taller.plazas - inscritos.length;
 }
 
+//Función para verificar si un usuario ya está inscrito en un taller
 function estaInscrito(tallerId, email, inscripciones) {
     return inscripciones.some(inscripcion => inscripcion.tallerId === tallerId && inscripcion.email.toLowerCase() === email.toLowerCase());
 }
 
+//Función para validar los datos de inscripción
 function validarInscripcion(datos) {
     const { tallerId, nombre, email } = datos;
     let errores = {};
@@ -73,6 +78,7 @@ function validarInscripcion(datos) {
     return { esValido, errores };
 }
 
+//Exportar los datos y funciones para que puedan ser utilizados en otros módulos
 module.exports = {
   talleres,
   inscripciones,
