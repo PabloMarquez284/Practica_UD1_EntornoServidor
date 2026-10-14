@@ -1,4 +1,6 @@
-# Practica_UD1_EntornoServidor
+# Práctica UD1 Entorno Servidor
+
+Este trabajo lo he realizado junto con el apoyo de la IA, guiándome paso a paso y ayudándome en los errores que he tenido. Dejo por aquí el enlace al chat con Gemini: https://gemini.google.com/share/d/1oNkZudi5aC9Nl5UuXSeEPs3c1DzFNPXt?usp=sharing
 
 Antes que nada, he instalado node.js en mi dispositivo para poder realizar el proyecto. Una vez instalado, he ejecutado node -v y nom -v para verificar que muestran una versión y luego lo he ejecutado con este comando ‘npm init -y’. En el código del paquete ‘package.json’ que se ha creado  he cambiado el tipo de ‘commonjs’ a “module’ para que así se puedan importar y exportar.
 Luego he instalado el paquete express con el comando ‘npm install express’, y así con todos estos paquetes: ejs, express-session, bcrypt, express-rate-limit, --save-dev, vitest y supertest. Y con esto completamos la base del proyecto.
