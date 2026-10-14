@@ -1,0 +1,75 @@
+/* Configuración básica de la página */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Cabecera y Pie */
+header {
+  background-color: #333;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+header a {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+footer {
+  background-color: #ddd;
+  text-align: center;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+/* Contenido principal */
+main {
+  width: 80%;
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+/* Títulos y enlaces */
+h2 {
+  color: #0056b3;
+}
+
+a {
+  color: #0056b3;
+}
+
+/* Formularios y botones básicos */
+form {
+  margin-bottom: 15px;
+}
+
+input, select, button {
+  padding: 6px;
+  margin: 5px 0;
+}
+
+button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Listas */
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 10px;
+}

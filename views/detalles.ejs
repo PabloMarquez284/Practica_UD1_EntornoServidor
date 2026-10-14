@@ -1,0 +1,20 @@
+<%- include('partials/cabecera') %>
+
+<p><a href="/talleres">&larr; Volver al listado</a></p>
+
+<h2><%= taller.titulo %></h2>
+<p><b>Categoría:</b> <%= taller.categoria %></p>
+<p><b>Nivel:</b> <%= taller.nivel %></p>
+<p><b>Estado:</b> <%= estado %></p>
+
+<% if (estado !== "Completo") { %>
+  <p>
+    <a href="/talleres/<%= taller.id %>/inscripcion">
+      <button type="button">Inscribirme a este taller</button>
+    </a>
+  </p>
+<% } else { %>
+  <p>Inscripciones cerradas (Aforo completo)</p>
+<% } %>
+
+<%- include('partials/pie') %>

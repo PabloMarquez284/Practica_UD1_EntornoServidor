@@ -17,8 +17,12 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
+//Redirección a /talleres
+app.get('/', (req, res) => {
+    res.redirect('/talleres');
+});
 
-//Get para obtener todos los talleres con filtros opcionales
+//GET para obtener todos los talleres con filtros opcionales
 app.get('/talleres', (req, res) => {
     const catg = req.query.categoria;
     const niv = req.query.nivel;
@@ -43,10 +47,10 @@ app.get('/talleres', (req, res) => {
             plazasRestantes: obtenerPlazasRestantes(taller, inscripciones)
         }));
 
-    res.json(resultado);
+    res.render('talleres', { talleres: resultado });
 });
 
-//Get para obtener un taller por su ID
+//GET para obtener un taller por su ID
 app.get('/talleres/:id', (req, res) => {
     const tallerId = parseInt(req.params.id, 10);
     const taller = talleres.find(taller => taller.id === tallerId);
@@ -55,21 +59,21 @@ app.get('/talleres/:id', (req, res) => {
         return res.status(404).json({ error: "Taller no encontrado" });
     }
 
-    let info = '';
+    let estado = '';
     const plazasRestantes = obtenerPlazasRestantes(taller, inscripciones);
     
     if (plazasRestantes === 0) {
-        info = `El taller "${taller.titulo}" no tiene plazas disponibles`;
+        estado = `Completo`;
     } else if (plazasRestantes === 1) {
-        info = `Solo queda 1 plaza disponible para el taller "${taller.titulo}"`;
+        estado = `Última plaza disponible`;
     } else {
-        info = `Quedan ${plazasRestantes} plazas disponibles para el taller "${taller.titulo}"`;
+        estado = `${plazasRestantes} plazas disponibles`;
     }
     
-    res.json({ ...taller, plazasRestantes, info });
+    res.render('detalles', { taller, estado, plazasRestantes });
 });
 
-//Get para el alta de inscripciones
+//GET para el alta de inscripciones
 app.get('/talleres/:id/inscripcion', (req, res) => {
     const tallerId = parseInt(req.params.id, 10);
     const taller = talleres.find(taller => taller.id === tallerId);
@@ -78,10 +82,11 @@ app.get('/talleres/:id/inscripcion', (req, res) => {
         return res.status(404).json({ error: "Taller no encontrado" });
     }
 
-    res.json({ tallerId, mensaje: `Formulario de inscripción para el taller "${taller.titulo}"` });
+    //Renderizar la vista enviando objetos vacíos iniciales para errores y datos
+    res.render('inscripcion', { taller, errores: {}, datos: {} });
 });
 
-//Post para procesar la inscripción
+//POST para procesar la inscripción
 app.post('/talleres/:id/inscripcion', (req, res) => {
     const tallerId = parseInt(req.params.id, 10);
     const taller = talleres.find(taller => taller.id === tallerId);
@@ -95,23 +100,32 @@ app.post('/talleres/:id/inscripcion', (req, res) => {
     const validacion = validarInscripcion(datosEntrada);
 
     if (!validacion.esValido) {
-        return res.status(400).json({ error: validacion.errores });
+        return res.status(400).render('inscripcion', { 
+            taller, 
+            errores: validacion.errores, 
+            datos: datosEntrada });
     }
 
     if (obtenerPlazasRestantes(taller, inscripciones) <= 0) {
-        return res.status(400).json({ mensaje: `El taller "${taller.titulo}" está completo` });
+        return res.status(400).render('inscripcion', { 
+            taller, 
+            errores: { general:"No hay plazas disponibles en este taller" }, 
+            datos: datosEntrada });
     }
 
     if (estaInscrito(tallerId, req.body.email, inscripciones)) {
-        return res.status(400).json({ error: "Ya estás inscrito en este taller" });
+        return res.status(400).render('inscripcion', { 
+            taller, 
+            errores: { general: "El correo electrónico ya está inscrito en este taller" }, 
+            datos: datosEntrada });
     }
 
-    //Guardar nueva içnscripción
+    //Guardar nueva inscripción
     const nuevaInscripcion = {
         id: inscripciones.length + 1,
         tallerId: tallerId,
-        nombre: req.body.nombre,
-        email: req.body.email
+        nombre: req.body.nombre.trim(),
+        email: req.body.email.trim()
     };
     inscripciones.push(nuevaInscripcion);
 
