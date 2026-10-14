@@ -48,7 +48,7 @@ app.get('/talleres', (req, res) => {
 
 //Get para obtener un taller por su ID
 app.get('/talleres/:id', (req, res) => {
-    const tallerId = parseInt(req.params.id);
+    const tallerId = parseInt(req.params.id, 10);
     const taller = talleres.find(taller => taller.id === tallerId);
 
     if (!taller) {
@@ -68,6 +68,57 @@ app.get('/talleres/:id', (req, res) => {
     
     res.json({ ...taller, plazasRestantes, info });
 });
+
+//Get para el alta de inscripciones
+app.get('/talleres/:id/inscripcion', (req, res) => {
+    const tallerId = parseInt(req.params.id, 10);
+    const taller = talleres.find(taller => taller.id === tallerId);
+
+    if (!taller) {
+        return res.status(404).json({ error: "Taller no encontrado" });
+    }
+
+    res.json({ tallerId, mensaje: `Formulario de inscripción para el taller "${taller.titulo}"` });
+});
+
+//Post para procesar la inscripción
+app.post('/talleres/:id/inscripcion', (req, res) => {
+    const tallerId = parseInt(req.params.id, 10);
+    const taller = talleres.find(taller => taller.id === tallerId);
+
+    if (!taller) {
+        return res.status(404).json({ error: "Taller no encontrado" });
+    }
+
+    //Validar campos recibidos (nombre y email)
+    const datosEntrada = { ...req.body, tallerId };
+    const validacion = validarInscripcion(datosEntrada);
+
+    if (!validacion.esValido) {
+        return res.status(400).json({ error: validacion.errores });
+    }
+
+    if (obtenerPlazasRestantes(taller, inscripciones) <= 0) {
+        return res.status(400).json({ mensaje: `El taller "${taller.titulo}" está completo` });
+    }
+
+    if (estaInscrito(tallerId, req.body.email, inscripciones)) {
+        return res.status(400).json({ error: "Ya estás inscrito en este taller" });
+    }
+
+    //Guardar nueva içnscripción
+    const nuevaInscripcion = {
+        id: inscripciones.length + 1,
+        tallerId: tallerId,
+        nombre: req.body.nombre,
+        email: req.body.email
+    };
+    inscripciones.push(nuevaInscripcion);
+
+    //Redireccion PRG en caso de éxito
+    return res.redirect(`/talleres/${tallerId}`);
+});
+
 
 //Llamada al servidor
 app.listen(PORT, () => {
