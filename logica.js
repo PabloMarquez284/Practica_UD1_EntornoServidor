@@ -79,7 +79,7 @@ function validarInscripcion(datos) {
 }
 
 //Exportar los datos y funciones para que puedan ser utilizados en otros módulos
-module.exports = {
+export {
   talleres,
   inscripciones,
   obtenerPlazasRestantes,
